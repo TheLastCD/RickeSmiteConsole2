@@ -7,9 +7,9 @@ namespace RickeSmiteConsole
 {
     public class Manager
     {
-        ///Users/charlie/Projects/RickeSmiteConsole/RickeSmiteConsole/Collection/Collection.txt
+        // /Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt
         public List<StockItem> StockList = new List<StockItem>();
-        string Path = @"Collection/Collection.txt";
+        string Path = @"/Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt";
         public void FillBase()
         {
             foreach(string item in File.ReadLines(Path))
@@ -56,7 +56,7 @@ namespace RickeSmiteConsole
             string BN = Verifier(false).ToLower();
             Console.Write("Please enter the State of this item (1) Checked Out 2)In_Place 3) Missing)");
             StockItem.CheckMiss State= StockItem.CheckMiss.Checked_Out;
-            switch (Int32.Parse(Verifier(true)))
+            switch (Int_Verify(3))
             {
                 case 1:
                     break;
@@ -89,9 +89,6 @@ namespace RickeSmiteConsole
                 }
 
             }
-            
-
-
         }
         private void NewEntity(int R, string M, string MID, int S, string LOC, string BN, StockItem.CheckMiss C)
         {
@@ -121,7 +118,7 @@ namespace RickeSmiteConsole
             Console.WriteLine("3) By Stock Amount");
             Console.WriteLine("4) By Location");
             Console.WriteLine("5) By Box Name");
-            Console.WriteLine("6) By State currently doesnt work");
+            Console.WriteLine("6) By State (currently doesnt work)");
             switch (Int_Verify(6))
             {
                 case 1:
@@ -154,7 +151,37 @@ namespace RickeSmiteConsole
                                        where x.Manufacturer == Querier("State")
                                        select x;
                     break;
+                default:
+                    queryresult = from x in StockList
+                                  where x.Manufacturer == Querier("Manufacturer")
+                                  select x;
+                    break;
             }
+            Console.WriteLine("Here are the results");
+            Console.WriteLine("ROSIS  |Manufacturer   |Manufacturer Number   |Stock|Location   |Box Name   |");
+            foreach (StockItem item in queryresult)
+            {
+                Console.WriteLine($"{item.RosID}|{item.Manufacturer}|{item.ManufacturerID}|{item.Stock}|{item.Location}|{item.BoxName}|");
+            }
+            while (true)
+            {
+                Console.WriteLine("Do you want to edit any of the existing data? Y/N");
+                string redo = Verifier(false);
+                if (redo.ToUpper() == "Y")
+                {
+                    SearchToEdit();
+                }
+                if (redo.ToUpper() == "N")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a valid response");
+                }
+
+            }
+
 
         }
         public void PrintAll()
@@ -179,7 +206,7 @@ namespace RickeSmiteConsole
                 catch
                 {
                     Console.WriteLine("Please enter a number");
-                    Verifier(isInt);
+                    verif = Verifier(isInt);
                 }
             }
             else
@@ -212,7 +239,7 @@ namespace RickeSmiteConsole
                 try
                 {
                     Chosen = Int32.Parse(Console.ReadLine());
-                    if (Chosen == -1 || Chosen > max)
+                    if (Chosen == 0 || Chosen > max)
                     {
                         Console.WriteLine($"please enter a value in the range 1 - {max}");
                     }
@@ -244,6 +271,43 @@ namespace RickeSmiteConsole
             }
             return query.ToLower();
             
+        }
+
+        // editting an entry
+        private void Edit(int IDLoc)
+        {
+            Console.WriteLine("Here is the info you can edit");
+            Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n");
+            switch (Int_Verify(5))
+            {
+                case 1:
+                    Console.WriteLine("What is the new name?");
+                    StockList[IDLoc].Manufacturer = Verifier(false);
+                    break;
+                case 2:
+                    Console.WriteLine("What is the new Part Number?");
+                    StockList[IDLoc].ManufacturerID = Verifier(false);
+                    break;
+                case 3:
+                    Console.WriteLine("What is the new stock amount?");
+                    StockList[IDLoc].Stock = Int32.Parse(Verifier(true));
+                    break;
+                case 4:
+                    Console.WriteLine("What is the new Location?");
+                    StockList[IDLoc].Location = Verifier(false);
+                    break;
+                case 5:
+                    Console.WriteLine("What is the new box name?");
+                    StockList[IDLoc].BoxName = Verifier(false);
+                    break;
+            }
+
+        }
+        private void SearchToEdit()
+        {
+            Console.WriteLine("please enter the ROSID of the invenotry to be edited");
+            Edit(Int32.Parse(Verifier(true)));
+
         }
     }
 }
