@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickeSmite Console 2", "RickeSmite Console 2.csproj", "{52F69CCC-F238-4CB6-9246-112E33081A24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52F69CCC-F238-4CB6-9246-112E33081A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F69CCC-F238-4CB6-9246-112E33081A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F69CCC-F238-4CB6-9246-112E33081A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F69CCC-F238-4CB6-9246-112E33081A24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B66B997F-E7F3-4BF4-964B-BBC5DE7A65E4}
+	EndGlobalSection
+EndGlobal
