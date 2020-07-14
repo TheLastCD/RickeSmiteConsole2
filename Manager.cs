@@ -8,6 +8,7 @@ namespace RickeSmiteConsole
     public class Manager
     {
         public List<StockItem> StockList = new List<StockItem>();
+        //yeah boi
         string Path = @"Collection.txt";
         public void FillBase()
         {
