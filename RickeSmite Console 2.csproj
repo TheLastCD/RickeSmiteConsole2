@@ -6,10 +6,4 @@
     <RootNamespace>RickeSmite_Console_2</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="Collection.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -7,22 +7,29 @@ namespace RickeSmiteConsole
 {
     public class Manager
     {
+        ///Users/charlie/Projects/RickeSmiteConsole/RickeSmiteConsole/Collection/Collection.txt
         public List<StockItem> StockList = new List<StockItem>();
-        //yeah boi
-        string Path = @"Collection.txt";
+        string Path = @"Collection/Collection.txt";
         public void FillBase()
         {
             foreach(string item in File.ReadLines(Path))
             {
-                string[] itemAttributes = item.Split(',');
+                if (item == "")
+                {
 
-                StockItem.CheckMiss holder = StockItem.CheckMiss.In_Place;
-                if (itemAttributes[6] == "Checked_out")
-                    holder = StockItem.CheckMiss.Checked_Out;
-                if (itemAttributes[6] == "Missing")
-                    holder = StockItem.CheckMiss.Missing;
+                }
+                else
+                {
+                    string[] itemAttributes = item.Split(',');
 
-                StockItem addNew = new StockItem(Int32.Parse(itemAttributes[0]),itemAttributes[1],itemAttributes[2],Int32.Parse(itemAttributes[3]),itemAttributes[4],itemAttributes[5],holder);
+                    StockItem.CheckMiss holder = StockItem.CheckMiss.In_Place;
+                    if (itemAttributes[6] == "Checked_out")
+                        holder = StockItem.CheckMiss.Checked_Out;
+                    if (itemAttributes[6] == "Missing")
+                        holder = StockItem.CheckMiss.Missing;
+
+                    StockList.Add(new StockItem(Int32.Parse(itemAttributes[0]), itemAttributes[1], itemAttributes[2], Int32.Parse(itemAttributes[3]), itemAttributes[4], itemAttributes[5], holder));
+                }
             }
         }
 
@@ -90,19 +97,17 @@ namespace RickeSmiteConsole
         {
             StockItem item = new StockItem(R,M,MID,S,LOC,BN,C);
             StockList.Add(item);
-            string toSave = $"{R},{M},{MID},{S},{LOC},{BN},{C}";
-            Console.Write(toSave);
+            string toSave = Environment.NewLine + $"{R},{M},{MID},{S},{LOC},{BN},{C}";
             if (!File.Exists(Path))
             {
                 Console.WriteLine("The file cannot be found");
             }
             else
             {
-                File.WriteAllText(Path, toSave);
-                //using (StreamWriter sw = File.AppendText(Path))
-                //{
-                //    sw.WriteLine(toSave);
-                //}
+                using (StreamWriter sw = File.AppendText(Path))
+                {
+                    sw.WriteLine(toSave);
+                }
             }
 
         }
@@ -207,7 +212,7 @@ namespace RickeSmiteConsole
                 try
                 {
                     Chosen = Int32.Parse(Console.ReadLine());
-                    if (Chosen == -1 || Chosen >= max)
+                    if (Chosen == -1 || Chosen > max)
                     {
                         Console.WriteLine($"please enter a value in the range 1 - {max}");
                     }
