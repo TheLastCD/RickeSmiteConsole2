@@ -33,6 +33,23 @@ namespace RickeSmiteConsole
             }
         }
 
+        public void MiddleMan()
+        {
+            Console.WriteLine("Please enter 1 for Stock Items and 2 fro Bolts");
+            switch (Int_Verify(2))
+            {
+                case 1:
+                    Additem_StockItem();
+                    break;
+                case 2:
+                    Additem_Bolt();
+                    break;
+                default:
+                    Console.WriteLine("there has been an unexpected error");
+                    break;
+            }
+            
+        }
         public void Additem_StockItem()
         {
             int nextROS = 0;
@@ -46,7 +63,7 @@ namespace RickeSmiteConsole
             
             Console.Write("Please enter an manufacturer:");
             string manu = Verifier(false).ToLower();
-            Console.Write("Please enter an manufacturer ID/ PartNumber:");
+            Console.Write("Please enter an Part Number:");
             string MID = Verifier(false).ToLower();
             Console.Write("Please enter stock amount:");
             int stock = Int32.Parse(Verifier(true));
@@ -109,12 +126,130 @@ namespace RickeSmiteConsole
 
         }
 
+        public void Additem_Bolt()
+        {
+            int nextROS = 0;
+            try
+            {
+                nextROS = StockList.Last().RosID + 1;
+            }
+            catch
+            {
+            }
+
+            Console.Write("Please enter an supplier:");
+            string Sup = Verifier(false).ToLower();
+
+            Console.Write("Please enter an Size:");
+            string Size = Verifier(false).ToLower();
+
+            Console.WriteLine("please enter the Length of the bolt");
+            int Length = Int32.Parse(Verifier(true));
+
+            Console.Write("Please enter stock amount: (1) ButtonHeads 2) SocketHeads 3) Countersunk 4) NormalHeads");
+            StockItem.BoltType BoltT = StockItem.BoltType.ButtonHeads;
+            switch (Int_Verify(3))
+            {
+                case 1:
+                    break;
+                case 2:
+                    BoltT = StockItem.BoltType.SocketHeads;
+                    break;
+                case 3:
+                    BoltT = StockItem.BoltType.CountersunkHead;
+                    break;
+                case 4:
+                    BoltT = StockItem.BoltType.NormalHeads;
+                    break;
+                default:
+                    Console.WriteLine("Chose an incorrect number its defaulted to Checked Out");
+                    break;
+            }
+            
+            Console.Write("Please enter stock amount: (1) High 2) Low) 3) None");
+            StockItem.BoltAmount BoltA = StockItem.BoltAmount.High;
+            switch (Int_Verify(3))
+            {
+                case 1:
+                    break;
+                case 2:
+                    BoltA = StockItem.BoltAmount.Low;
+                    break;
+                case 3:
+                    BoltA = StockItem.BoltAmount.None;
+                    break;
+                default:
+                    Console.WriteLine("Chose an incorrect number its defaulted to Checked Out");
+                    break;
+            }
+
+            Console.Write("Please enter the location:");
+            string LOC = Verifier(false).ToLower();
+
+            Console.Write("Please enter the box name:");
+            string BN = Verifier(false).ToLower();
+
+            Console.Write("Please enter the State of this item (1) Checked Out 2)In_Place 3) Missing)");
+            StockItem.CheckMiss State = StockItem.CheckMiss.Checked_Out;
+            switch (Int_Verify(3))
+            {
+                case 1:
+                    break;
+                case 2:
+                    State = StockItem.CheckMiss.In_Place;
+                    break;
+                case 3:
+                    State = StockItem.CheckMiss.Missing;
+                    break;
+                default:
+                    Console.WriteLine("Chose an incorrect number its defaulted to Checked Out");
+                    break;
+            }
+
+            NewEntity(nextROS, Sup, Size,Length,BoltT,BoltA, LOC, BN, State);
+            while (true)
+            {
+                Console.WriteLine("Would you like to enter another item: Y/N");
+                string redo = Verifier(false);
+                if (redo.ToUpper() == "Y")
+                {
+                    Additem_StockItem();
+                }
+                if (redo.ToUpper() == "N")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a valid response");
+                }
+
+            }
+        }
+        public void NewEntity(int R, string S, string SZ, int L, StockItem.BoltType BT,StockItem.BoltAmount BA, string LOC, string BN, StockItem.CheckMiss C)
+        {
+            StockItem item = new StockItem(R, S, SZ, L, BT, BA, LOC, BN,C);
+            StockList.Add(item);
+            string toSave = Environment.NewLine + $"{R},{S},{BT.ToString()+SZ +L},{BA},{LOC},{BN},{C}";
+            if (!File.Exists(Path))
+            {
+                Console.WriteLine("The file cannot be found");
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(Path))
+                {
+                    sw.WriteLine(toSave);
+                }
+            }
+        }
+
         public void Search()
         {
             System.Collections.Generic.IEnumerable<RickeSmiteConsole.StockItem> queryresult;
             Console.WriteLine("what category would you like to search?");
             Console.WriteLine("1) By Manufacturer");
-            Console.WriteLine("2) By Manufacturer/Part Number");
+            Console.WriteLine("2) By Part Number");
             Console.WriteLine("3) By Stock Amount");
             Console.WriteLine("4) By Location");
             Console.WriteLine("5) By Box Name");
@@ -274,38 +409,45 @@ namespace RickeSmiteConsole
         }
 
         // editting an entry
-        private void Edit(int IDLoc)
+        private void Edit(int IDLoc, bool IsBolt)
         {
             Console.WriteLine("Here is the info you can edit");
-            Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n");
-            switch (Int_Verify(5))
+            if (!IsBolt)
             {
-                case 1:
-                    Console.WriteLine("What is the new name?");
-                    StockList[IDLoc].Manufacturer = Verifier(false);
-                    break;
-                case 2:
-                    Console.WriteLine("What is the new Part Number?");
-                    StockList[IDLoc].ManufacturerID = Verifier(false);
-                    break;
-                case 3:
-                    Console.WriteLine("What is the new stock amount?");
-                    StockList[IDLoc].Stock = Int32.Parse(Verifier(true));
-                    break;
-                case 4:
-                    Console.WriteLine("What is the new Location?");
-                    StockList[IDLoc].Location = Verifier(false);
-                    break;
-                case 5:
-                    Console.WriteLine("What is the new box name?");
-                    StockList[IDLoc].BoxName = Verifier(false);
-                    break;
+                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n");
+                switch (Int_Verify(5))
+                {
+                    case 1:
+                        Console.WriteLine("What is the new Name?");
+                        StockList[IDLoc].Manufacturer = Verifier(false);
+                        break;
+                    case 2:
+                        Console.WriteLine("What is the new Part Number?");
+                        StockList[IDLoc].ManufacturerID = Verifier(false);
+                        break;
+                    case 3:
+                        Console.WriteLine("What is the new stock amount?");
+                        StockList[IDLoc].Stock = Int32.Parse(Verifier(true));
+                        break;
+                    case 4:
+                        Console.WriteLine("What is the new Location?");
+                        StockList[IDLoc].Location = Verifier(false);
+                        break;
+                    case 5:
+                        Console.WriteLine("What is the new box name?");
+                        StockList[IDLoc].BoxName = Verifier(false);
+                        break;
+                }
+            }
+            else
+            {
+
             }
 
         }
         private void SearchToEdit()
         {
-            Console.WriteLine("please enter the ROSID of the invenotry to be edited");
+            Console.WriteLine("please enter the ROSID of the inventory to be edited");
             Edit(Int32.Parse(Verifier(true)));
 
         }

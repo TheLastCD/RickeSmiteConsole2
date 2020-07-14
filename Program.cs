@@ -22,7 +22,7 @@ namespace RickeSmiteConsole
                         break;
                     case 2:
 
-                        runtime.Additem_StockItem();
+                        runtime.MiddleMan();
                         break;
                     case 3:
                         runtime.PrintAll();
