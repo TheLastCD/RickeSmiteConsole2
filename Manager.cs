@@ -33,7 +33,7 @@ namespace RickeSmiteConsole
             }
         }
 
-        public void AddItem()
+        public void Additem_StockItem()
         {
             int nextROS = 0;
             try
@@ -77,7 +77,7 @@ namespace RickeSmiteConsole
                 string redo = Verifier(false);
                 if (redo.ToUpper() == "Y")
                 {
-                    AddItem();
+                    Additem_StockItem();
                 }
                 if(redo.ToUpper() == "N")
                 {
@@ -186,7 +186,7 @@ namespace RickeSmiteConsole
         }
         public void PrintAll()
         {
-            Console.WriteLine("ROSIS  |Manufacturer   |Manufacturer Number   |Stock|Location   |Box Name   |");
+            Console.WriteLine("ROSIS  |Manufacturer   |Part Number   |Stock|Location   |Box Name   |");
             foreach(StockItem item in StockList)
             {
                 Console.WriteLine($"{item.RosID}|{item.Manufacturer}|{item.ManufacturerID}|{item.Stock}|{item.Location}|{item.BoxName}|");

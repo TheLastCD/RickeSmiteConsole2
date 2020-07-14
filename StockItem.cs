@@ -17,11 +17,16 @@ namespace RickeSmiteConsole
            None
         }
 
-        //Storage
+        //Stock Items
         public string Manufacturer, ManufacturerID, Location, BoxName;
         public int RosID, Stock;
         public CheckMiss Whereis;
+
+        //Bolts
+        public string Supplier, Size;
+        public int Length;
         public BoltAmount Bolts;
+        
 
         //Constructors
         public StockItem(int R, string M, string MID,int S, string LOC,string BN, CheckMiss C)
@@ -35,15 +40,16 @@ namespace RickeSmiteConsole
             Whereis = C;
         }
 
-        public StockItem(int R, string M, string MID, BoltAmount BA, string LOC, string BN, CheckMiss C)
+        public StockItem(int R, string S, string SZ,int L, BoltAmount BA, string LOC, string BN,CheckMiss C)
         {
             RosID = R;
-            Manufacturer = M;
-            ManufacturerID = MID;
+            Supplier = S;
+            Size = SZ + L;
             Bolts = BA;
             Location = LOC;
             BoxName = BN;
             Whereis = C;
+            Length = L;
         }
 
         
