@@ -7,8 +7,10 @@ namespace RickeSmiteConsole
 {
     public class Manager
     {
-        // /Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt
+        // /Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt (Mac solution Location)
         public List<StockItem> StockList = new List<StockItem>();
+        public List<int> EditsMade = new List<int>();
+
         string Path = @"/Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt";
         public void FillBase()
         {
@@ -416,6 +418,7 @@ namespace RickeSmiteConsole
             }
             return Chosen;
         }
+
         public string Querier(string querytype)
         {
             string query = "";
@@ -439,11 +442,12 @@ namespace RickeSmiteConsole
         // editting an entry
         private void Edit(int IDLoc)
         {
+            bool Cancelled = false;
             Console.WriteLine("Here is the info you can edit");
             if (StockList[IDLoc].Item == StockItem.ItemType.Stock)
             {
-                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n");
-                switch (Int_Verify(5))
+                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n 6) to Cancel");
+                switch (Int_Verify(6))
                 {
                     case 1:
                         Console.WriteLine("What is the new Manufacturer?");
@@ -465,13 +469,15 @@ namespace RickeSmiteConsole
                         Console.WriteLine("What is the new box name?");
                         StockList[IDLoc].BoxName = Verifier(false);
                         break;
+                    case 6:
+                        Cancelled = true;
+                        break;
                 }
-                //Resave
             }
             else
             {
-                Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName}\n");
-                switch (Int_Verify(7))
+                Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName} 8) To Cancel\n");
+                switch (Int_Verify(8))
                 {
                     case 1:
                         Console.WriteLine("What is the new Supplier?");
@@ -479,7 +485,7 @@ namespace RickeSmiteConsole
                         break;
                     case 2:
                         Console.WriteLine("What is the new Bolt Type?");
-                        //StockList[IDLoc].ManufacturerID = Verifier(false);
+                        
                         break;
                     case 3:
                         Console.WriteLine("What is the new Size?");
@@ -501,16 +507,29 @@ namespace RickeSmiteConsole
                         Console.WriteLine("What is the new BoxName?");
                         StockList[IDLoc].BoxName = Verifier(false);
                         break;
+                    case 8:
+                        Cancelled = true;
+                        break;
 
                 }
+            }
+            if (!Cancelled)
+            {
+                //Resave
             }
 
         }
         private void SearchToEdit()
         {
             Console.WriteLine("please enter the ROSID of the inventory to be edited");
-            //Edit(Int32.Parse(Verifier(true)));
+            Edit(Int32.Parse(Verifier(true)));
 
+        }
+
+        private void Resave(int IDloc, StockItem.ItemType IT)
+        {
+
+            File.WriteAllText(Path, File.ReadAllText(Path).Replace("some text", "some other text"));
         }
     }
 }
