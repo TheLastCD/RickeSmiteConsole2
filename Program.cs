@@ -21,7 +21,6 @@ namespace RickeSmiteConsole
                         runtime.Search();
                         break;
                     case 2:
-
                         runtime.MiddleMan();
                         break;
                     case 3:

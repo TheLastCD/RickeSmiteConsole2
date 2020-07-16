@@ -23,6 +23,11 @@ namespace RickeSmiteConsole
             CountersunkHead,
             NormalHeads
         }
+        public enum ItemType
+        {
+            Stock,
+            Bolt
+        }
 
         //Stock Items
         public string Manufacturer, ManufacturerID, Location, BoxName;
@@ -34,9 +39,13 @@ namespace RickeSmiteConsole
         public int Length;
         public BoltAmount Bolt_Amount;
         public BoltType Bolt_Type;
+
+        //Not Written in arguments
+        public ItemType Item;
         
 
         //Constructors
+        //For a Stock Item
         public StockItem(int R, string M, string MID,int S, string LOC,string BN, CheckMiss C)
         {
             RosID = R;
@@ -46,20 +55,23 @@ namespace RickeSmiteConsole
             Location = LOC;
             BoxName = BN;
             Whereis = C;
+            Item = ItemType.Stock;
         }
 
+        //For a Bolt
         public StockItem(int R, string S, string SZ,int L,BoltType BT ,BoltAmount BA, string LOC, string BN,CheckMiss C)
         {
             RosID = R;
             Supplier = S;
             Size = SZ;
-            Length
+            Length = L;
             Bolt_Type = BT;
             Bolt_Amount = BA;
             Location = LOC;
             BoxName = BN;
             Whereis = C;
             Length = L;
+            Item = ItemType.Bolt;
         }
 
         

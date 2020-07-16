@@ -28,7 +28,32 @@ namespace RickeSmiteConsole
                     if (itemAttributes[6] == "Missing")
                         holder = StockItem.CheckMiss.Missing;
 
-                    StockList.Add(new StockItem(Int32.Parse(itemAttributes[0]), itemAttributes[1], itemAttributes[2], Int32.Parse(itemAttributes[3]), itemAttributes[4], itemAttributes[5], holder));
+                    try// passes Stock Item
+                    {
+                        Int32.Parse(itemAttributes[3]);
+                        StockList.Add(new StockItem(Int32.Parse(itemAttributes[0]), itemAttributes[1], itemAttributes[2], Int32.Parse(itemAttributes[3]), itemAttributes[4], itemAttributes[5], holder));
+                    }
+                    catch//if Caught its a Bolt
+                    {
+                        string[] Seperate_Bolt_Entities = itemAttributes[2].Split(':');
+
+                        StockItem.BoltType BT = StockItem.BoltType.ButtonHeads;
+                        if (Seperate_Bolt_Entities[0] == "SocketHeads")
+                            BT = StockItem.BoltType.SocketHeads;
+                        if(Seperate_Bolt_Entities[0] == "CountersunkHead")
+                            BT = StockItem.BoltType.CountersunkHead;
+                        if (Seperate_Bolt_Entities[0] == "NormalHeads")
+                            BT = StockItem.BoltType.NormalHeads;
+
+                        StockItem.BoltAmount BA = StockItem.BoltAmount.High;
+                        if (itemAttributes[3] == "Low")
+                            BA = StockItem.BoltAmount.Low;
+                        if (itemAttributes[3] == "None")
+                            BA = StockItem.BoltAmount.None;
+
+                        StockList.Add(new StockItem(Int32.Parse(itemAttributes[0]), itemAttributes[1], Seperate_Bolt_Entities[1],Int32.Parse(Seperate_Bolt_Entities[2]),BT, BA, itemAttributes[4], itemAttributes[5], holder));
+                    }
+                   
                 }
             }
         }
@@ -230,7 +255,7 @@ namespace RickeSmiteConsole
         {
             StockItem item = new StockItem(R, S, SZ, L, BT, BA, LOC, BN,C);
             StockList.Add(item);
-            string toSave = Environment.NewLine + $"{R},{S},{BT.ToString()+SZ +L},{BA},{LOC},{BN},{C}";
+            string toSave = Environment.NewLine + $"{R},{S},{$"{BT.ToString()}: {SZ}: {L}"},{BA},{LOC},{BN},{C}";
             if (!File.Exists(Path))
             {
                 Console.WriteLine("The file cannot be found");
@@ -324,7 +349,10 @@ namespace RickeSmiteConsole
             Console.WriteLine("ROSIS  |Manufacturer   |Part Number   |Stock|Location   |Box Name   |");
             foreach(StockItem item in StockList)
             {
-                Console.WriteLine($"{item.RosID}|{item.Manufacturer}|{item.ManufacturerID}|{item.Stock}|{item.Location}|{item.BoxName}|");
+                if(item.Item == StockItem.ItemType.Stock)
+                    Console.WriteLine($"{item.RosID}|{item.Manufacturer}|{item.ManufacturerID}|{item.Stock}|{item.Location}|{item.BoxName}|");
+                else
+                    Console.WriteLine($"{item.RosID}|{item.Supplier}|{item.Bolt_Type} {item.Size} {item.Length}|{item.Bolt_Amount}|{item.Location}|{item.BoxName}|");
             }
         }
 
@@ -409,16 +437,16 @@ namespace RickeSmiteConsole
         }
 
         // editting an entry
-        private void Edit(int IDLoc, bool IsBolt)
+        private void Edit(int IDLoc)
         {
             Console.WriteLine("Here is the info you can edit");
-            if (!IsBolt)
+            if (StockList[IDLoc].Item == StockItem.ItemType.Stock)
             {
                 Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n");
                 switch (Int_Verify(5))
                 {
                     case 1:
-                        Console.WriteLine("What is the new Name?");
+                        Console.WriteLine("What is the new Manufacturer?");
                         StockList[IDLoc].Manufacturer = Verifier(false);
                         break;
                     case 2:
@@ -438,17 +466,50 @@ namespace RickeSmiteConsole
                         StockList[IDLoc].BoxName = Verifier(false);
                         break;
                 }
+                //Resave
             }
             else
             {
+                Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName}\n");
+                switch (Int_Verify(7))
+                {
+                    case 1:
+                        Console.WriteLine("What is the new Supplier?");
+                        StockList[IDLoc].Supplier = Verifier(false);
+                        break;
+                    case 2:
+                        Console.WriteLine("What is the new Bolt Type?");
+                        //StockList[IDLoc].ManufacturerID = Verifier(false);
+                        break;
+                    case 3:
+                        Console.WriteLine("What is the new Size?");
+                        StockList[IDLoc].Size = Verifier(false);
+                        break;
+                    case 4:
+                        Console.WriteLine("What is the new Length?");
+                        StockList[IDLoc].Length = Int32.Parse(Verifier(true));
+                        break;
+                    case 5:
+                        Console.WriteLine("What is the new Stock?");
+                        //StockList[IDLoc].BoxName = Verifier(false);
+                        break;
+                    case 6:
+                        Console.WriteLine("What is the new Location?");
+                        StockList[IDLoc].Location = Verifier(false);
+                        break;
+                    case 7:
+                        Console.WriteLine("What is the new BoxName?");
+                        StockList[IDLoc].BoxName = Verifier(false);
+                        break;
 
+                }
             }
 
         }
         private void SearchToEdit()
         {
             Console.WriteLine("please enter the ROSID of the inventory to be edited");
-            Edit(Int32.Parse(Verifier(true)));
+            //Edit(Int32.Parse(Verifier(true)));
 
         }
     }
