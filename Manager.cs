@@ -11,7 +11,7 @@ namespace RickeSmiteConsole
         public List<StockItem> StockList = new List<StockItem>();
         public List<int> EditsMade = new List<int>();
 
-        string Path = @"/Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt";
+        string Path = @"C:\Users\lambo\source\repos\RickeSmite Console 2\Collection\Collection.txt";
         public void FillBase()
         {
             foreach(string item in File.ReadLines(Path))
