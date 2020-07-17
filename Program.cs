@@ -10,7 +10,7 @@ namespace RickeSmiteConsole
             runtime.FillBase();
             while (true)
             {
-                Console.WriteLine("Alpha version 0.5");
+                Console.WriteLine("Alpha version 0.6.1");
                 Console.WriteLine("Hello What would you like to use:");
                 Console.WriteLine("1) Search for Item");
                 Console.WriteLine("2) Add a new Item");

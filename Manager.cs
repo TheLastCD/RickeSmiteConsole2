@@ -3,15 +3,17 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Timers;
 namespace RickeSmiteConsole
 {
     public class Manager
     {
         // /Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt (Mac solution Location)
+        // C:\Users\lambo\source\repos\RickeSmite Console 2\Collection\Collection.txt (Windows Solution Location)
         public List<StockItem> StockList = new List<StockItem>();
         public List<int> EditsMade = new List<int>();
 
-        string Path = @"C:\Users\lambo\source\repos\RickeSmite Console 2\Collection\Collection.txt";
+        string Path = @"/Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt";
         public void FillBase()
         {
             foreach(string item in File.ReadLines(Path))
@@ -62,7 +64,7 @@ namespace RickeSmiteConsole
 
         public void MiddleMan()
         {
-            Console.WriteLine("Please enter 1 for Stock Items and 2 fro Bolts");
+            Console.WriteLine("Please enter: \n1) for Stock Items \n2) for Bolts");
             switch (Int_Verify(2))
             {
                 case 1:
@@ -274,6 +276,7 @@ namespace RickeSmiteConsole
         public void Search()
         {
             System.Collections.Generic.IEnumerable<RickeSmiteConsole.StockItem> queryresult;
+            string Query = "";
             Console.WriteLine("what category would you like to search?");
             Console.WriteLine("1) By Manufacturer");
             Console.WriteLine("2) By Part Number");
@@ -284,38 +287,45 @@ namespace RickeSmiteConsole
             switch (Int_Verify(6))
             {
                 case 1:
+                    Query = Querier("Manufacturer");
                     queryresult = from x in StockList
-                                  where x.Manufacturer == Querier("Manufacturer")
+                                  where x.Manufacturer.ToString().ToLower() == Query
                                   select x;
                     break;
                 case 2:
+                    Query = Querier("Part number");
                     queryresult = from x in StockList
-                                       where x.ManufacturerID == Querier("Part number")
-                                       select x;
+                                  where x.ManufacturerID.ToString().ToLower() == Query
+                                  select x;
                     break;
                 case 3:
+                    Query = Querier("Stock Amount");
                     queryresult = from x in StockList
-                                       where x.Stock == Int32.Parse(Querier("Stock Amount"))
-                                       select x;
+                                  where x.Stock.ToString() == Query
+                                  select x;
                     break;
                 case 4:
+                    Query = Querier("Location");
                     queryresult = from x in StockList
-                                       where x.Location == Querier("Location")
-                                       select x;
+                                  where x.Location.ToString().ToLower() == Query
+                                  select x;
                     break;
                 case 5:
+                    Query = Querier("Box Name");
                     queryresult = from x in StockList
-                                       where x.BoxName == Querier("Box Name")
-                                       select x;
+                                  where x.BoxName.ToString().ToLower() == Query
+                                  select x;
                     break;
                 case 6:
+                    Query = Querier("State");
                     queryresult = from x in StockList
-                                       where x.Manufacturer == Querier("State")
-                                       select x;
+                                  where x.Whereis.ToString().ToLower() == Query
+                                  select x;
                     break;
                 default:
+                    Query = Querier("Manufacturer");
                     queryresult = from x in StockList
-                                  where x.Manufacturer == Querier("Manufacturer")
+                                  where x.Manufacturer.ToString().ToLower() == Query
                                   select x;
                     break;
             }
@@ -333,15 +343,17 @@ namespace RickeSmiteConsole
                 {
                     SearchToEdit();
                 }
-                if (redo.ToUpper() == "N")
-                {
-                    break;
-                }
                 else
                 {
-                    Console.WriteLine("Please enter a valid response");
+                    if (redo.ToUpper() == "N")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter a valid response hi");
+                    }
                 }
-
             }
 
 
@@ -443,10 +455,12 @@ namespace RickeSmiteConsole
         private void Edit(int IDLoc)
         {
             bool Cancelled = false;
+            StockItem Original;
             Console.WriteLine("Here is the info you can edit");
             if (StockList[IDLoc].Item == StockItem.ItemType.Stock)
             {
-                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n 6) to Cancel");
+                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n6) to Cancel");
+                Original = new StockItem(StockList[IDLoc].RosID,StockList[IDLoc].Manufacturer,StockList[IDLoc].ManufacturerID,StockList[IDLoc].Stock,StockList[IDLoc].Location,StockList[IDLoc].BoxName,StockList[IDLoc].Whereis);
                 switch (Int_Verify(6))
                 {
                     case 1:
@@ -477,6 +491,7 @@ namespace RickeSmiteConsole
             else
             {
                 Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName} 8) To Cancel\n");
+                Original = new StockItem(StockList[IDLoc].RosID,StockList[IDLoc].Supplier, StockList[IDLoc].Size, StockList[IDLoc].Length, StockList[IDLoc].Bolt_Type,StockList[IDLoc].Bolt_Amount,StockList[IDLoc].Location,StockList[IDLoc].BoxName,StockList[IDLoc].Whereis);
                 switch (Int_Verify(8))
                 {
                     case 1:
@@ -515,7 +530,7 @@ namespace RickeSmiteConsole
             }
             if (!Cancelled)
             {
-                //Resave
+                Resave(IDLoc, Original);
             }
 
         }
@@ -526,10 +541,22 @@ namespace RickeSmiteConsole
 
         }
 
-        private void Resave(int IDloc, StockItem.ItemType IT)
+        private void Resave(int IDLoc, StockItem Original)
         {
-
-            File.WriteAllText(Path, File.ReadAllText(Path).Replace("some text", "some other text"));
+            string toSave = "",
+                toReplace = "";
+            if (Original.Item.ToString() == "Stock")
+            {
+                Console.WriteLine("hi");
+                toSave = $"{StockList[IDLoc].RosID},{StockList[IDLoc].Manufacturer},{StockList[IDLoc].ManufacturerID},{StockList[IDLoc].Stock},{StockList[IDLoc].Location},{StockList[IDLoc].BoxName},{StockList[IDLoc].Whereis.ToString()}";
+                toReplace = $"{Original.RosID},{Original.Manufacturer},{Original.ManufacturerID},{Original.Stock},{Original.Location},{Original.BoxName},{Original.Whereis.ToString()}";
+            }
+            else
+            {
+                toSave = $"{StockList[IDLoc].RosID},{StockList[IDLoc].Supplier},{$"{StockList[IDLoc].Bolt_Type.ToString()}: {StockList[IDLoc].Size}: {StockList[IDLoc].Length}"},{StockList[IDLoc].Bolt_Amount},{StockList[IDLoc].Location},{StockList[IDLoc].BoxName},{StockList[IDLoc].Whereis.ToString()}";
+                toReplace = $"{Original.RosID},{Original.Supplier},{$"{Original.Bolt_Type.ToString()}: {Original.Size}: {Original.Length}"},{Original.Bolt_Amount},{Original.Location},{Original.BoxName},{Original.Whereis.ToString()}";
+            }
+            File.WriteAllText(Path, File.ReadAllText(Path).Replace(toReplace, toSave));
         }
     }
 }
