@@ -13,7 +13,7 @@ namespace RickeSmiteConsole
         public List<StockItem> StockList = new List<StockItem>();
         public List<int> EditsMade = new List<int>();
 
-        string Path = @"/Users/charlie/Projects/RickeSmiteConsole2/Collection/Collection.txt";
+        string Path = @"Collection.txt";
         public void FillBase()
         {
             foreach(string item in File.ReadLines(Path))
