@@ -18,7 +18,7 @@ namespace RickeSmiteConsole
         {
             foreach(string item in File.ReadLines(Path))
             {
-                if (item == "")
+                if (item == ""|| item.ToLower() == "deleted")
                 {
 
                 }
@@ -351,7 +351,7 @@ namespace RickeSmiteConsole
                     }
                     else
                     {
-                        Console.WriteLine("Please enter a valid response hi");
+                        Console.WriteLine("Please enter a valid response");
                     }
                 }
             }
@@ -459,9 +459,9 @@ namespace RickeSmiteConsole
             Console.WriteLine("Here is the info you can edit");
             if (StockList[IDLoc].Item == StockItem.ItemType.Stock)
             {
-                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n6) to Cancel");
+                Console.WriteLine($"1) Manufacturer: {StockList[IDLoc].Manufacturer}\n2) Part Number: {StockList[IDLoc].ManufacturerID}\n3) Stock: {StockList[IDLoc].Stock}\n4) Location: {StockList[IDLoc].Location}\n5) Box Name: {StockList[IDLoc].BoxName}\n6) to Cancel\n7) to Delete");
                 Original = new StockItem(StockList[IDLoc].RosID,StockList[IDLoc].Manufacturer,StockList[IDLoc].ManufacturerID,StockList[IDLoc].Stock,StockList[IDLoc].Location,StockList[IDLoc].BoxName,StockList[IDLoc].Whereis);
-                switch (Int_Verify(6))
+                switch (Int_Verify(7))
                 {
                     case 1:
                         Console.WriteLine("What is the new Manufacturer?");
@@ -486,13 +486,16 @@ namespace RickeSmiteConsole
                     case 6:
                         Cancelled = true;
                         break;
+                    case 7:
+                        Delete(IDLoc);
+                        break;
                 }
             }
             else
             {
-                Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName} 8) To Cancel\n");
+                Console.WriteLine($"1) Supplier: {StockList[IDLoc].Supplier}\n2) Bolt Type: {StockList[IDLoc].Bolt_Type}\n3) Size: {StockList[IDLoc].Size}\n4) Length: {StockList[IDLoc].Length}\n5) Stock: {StockList[IDLoc].Bolt_Amount}\n 6) Location: {StockList[IDLoc].Location} 7) Box Name: {StockList[IDLoc].BoxName} 8) To Cancel \n9) To Delete");
                 Original = new StockItem(StockList[IDLoc].RosID,StockList[IDLoc].Supplier, StockList[IDLoc].Size, StockList[IDLoc].Length, StockList[IDLoc].Bolt_Type,StockList[IDLoc].Bolt_Amount,StockList[IDLoc].Location,StockList[IDLoc].BoxName,StockList[IDLoc].Whereis);
-                switch (Int_Verify(8))
+                switch (Int_Verify(9))
                 {
                     case 1:
                         Console.WriteLine("What is the new Supplier?");
@@ -525,6 +528,9 @@ namespace RickeSmiteConsole
                     case 8:
                         Cancelled = true;
                         break;
+                    case 9:
+                        Delete(IDLoc);
+                        break;
 
                 }
             }
@@ -547,7 +553,6 @@ namespace RickeSmiteConsole
                 toReplace = "";
             if (Original.Item.ToString() == "Stock")
             {
-                Console.WriteLine("hi");
                 toSave = $"{StockList[IDLoc].RosID},{StockList[IDLoc].Manufacturer},{StockList[IDLoc].ManufacturerID},{StockList[IDLoc].Stock},{StockList[IDLoc].Location},{StockList[IDLoc].BoxName},{StockList[IDLoc].Whereis.ToString()}";
                 toReplace = $"{Original.RosID},{Original.Manufacturer},{Original.ManufacturerID},{Original.Stock},{Original.Location},{Original.BoxName},{Original.Whereis.ToString()}";
             }
@@ -557,6 +562,23 @@ namespace RickeSmiteConsole
                 toReplace = $"{Original.RosID},{Original.Supplier},{$"{Original.Bolt_Type.ToString()}: {Original.Size}: {Original.Length}"},{Original.Bolt_Amount},{Original.Location},{Original.BoxName},{Original.Whereis.ToString()}";
             }
             File.WriteAllText(Path, File.ReadAllText(Path).Replace(toReplace, toSave));
+        }
+        private void Delete(int IDLoc)
+        {
+            string toSave = "",
+                toReplace = "";
+            if (StockList[IDLoc].Item.ToString() == "Stock")
+            {
+                toReplace = $"{StockList[IDLoc].RosID},{StockList[IDLoc].Manufacturer},{StockList[IDLoc].ManufacturerID},{StockList[IDLoc].Stock},{StockList[IDLoc].Location},{StockList[IDLoc].BoxName},{StockList[IDLoc].Whereis.ToString()}";
+            }
+            else
+            {
+                toReplace = $"{StockList[IDLoc].RosID},{StockList[IDLoc].Supplier},{$"{StockList[IDLoc].Bolt_Type.ToString()}: {StockList[IDLoc].Size}: {StockList[IDLoc].Length}"},{StockList[IDLoc].Bolt_Amount},{StockList[IDLoc].Location},{StockList[IDLoc].BoxName},{StockList[IDLoc].Whereis.ToString()}";
+
+            }
+            File.WriteAllText(Path, File.ReadAllText(Path).Replace(toReplace, toSave));
+            Console.WriteLine("Item Deleted");
+            StockList.RemoveAt(IDLoc);
         }
     }
 }
